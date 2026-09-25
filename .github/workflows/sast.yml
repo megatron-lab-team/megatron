@@ -2,7 +2,7 @@ name: "Semgrep SAST"
 
 on:
   push:
-    branches: [ "main", "master", "first_pipeline" ]
+    branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
 
