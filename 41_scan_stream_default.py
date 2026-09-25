@@ -30,9 +30,9 @@ def get_cursor():
 def select_ip_list():
     cursor, connection = get_cursor()
     cursor = connection.cursor()
-    query = f"""SELECT `ip`, CONCAT(REPLACE(`ip`,'.','_'), '-' , `country_code`, '-', `region`, '-', `city`) as 'name_camera'
-            FROM rtsp_scan where `url` is NULL and `up` = '{os.uname()[1]}';"""
-    cursor.execute(query)
+    query = """SELECT `ip`, CONCAT(REPLACE(`ip`,'.','_'), '-' , `country_code`, '-', `region`, '-', `city`) as 'name_camera'
+               FROM rtsp_scan where `url` is NULL and `up` = %s;"""
+    cursor.execute(query, (os.uname()[1],))
     return cursor.fetchall()
 
 
@@ -43,19 +43,14 @@ query = "SELECT `path`, `login`, `passwd` FROM `view_support_path_default`"
 cursor.execute(query)
 link_list = cursor.fetchall()
 
-#link_list = []
-#for i in rows:
-#    link_list.append(i[0])
-
 
 def insert_url(link_one, ip, link, login, passwd):
     cursor, con = get_cursor()
     cursor = con.cursor()
 
-    query = f"""UPDATE `rtsp_scan` SET `url` = '{link_one}', `up` = '{os.uname()[1]}', `link` = '{link}', `login` = '{login}', `passwd` = '{passwd}'
-                WHERE `ip` = '{ip}';"""
-    print(query)
-    cursor.execute(query)
+    query = """UPDATE `rtsp_scan` SET `url` = %s, `up` = %s, `link` = %s, `login` = %s, `passwd` = %s
+               WHERE `ip` = %s;"""
+    cursor.execute(query, (link_one, os.uname()[1], link, login, passwd, ip))
     con.commit()
 
 
@@ -101,10 +96,11 @@ if __name__ == "__main__":
     main()
     done = time.time() - start_time
 
-    TOKEN = '5410845659:AAHKyxGyjRUZG-b_iNC52M7xiSPlHDLZMOw'
-    CHAT_ID = '-1001533673238'
-    SEND_URL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-
-    requests.post(SEND_URL, json={'chat_id': CHAT_ID, 'text': f"41_scan_stream_default done - {int(done)}"})
-    substream.main()
+    TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+    CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
     
+    if TOKEN and CHAT_ID:
+        SEND_URL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+        requests.post(SEND_URL, json={'chat_id': CHAT_ID, 'text': f"41_scan_stream_default done - {int(done)}"})
+        
+    substream.main() 
