@@ -23,9 +23,19 @@ jobs:
       - name: Run Semgrep
         run: |
           pip install semgrep
-          semgrep scan --config "p/security-audit" --config "p/django" --config "p/owasp-top-ten" || true
-
-          semgrep scan --config "p/security-audit" --config "p/django" --config "p/owasp-top-ten" --sarif -o semgrep-findings.sarif || true
+          semgrep scan \
+            --config "p/security-audit" \
+            --config "p/django" \
+            --config "p/owasp-top-ten" \
+            --no-git-ignore \
+            . || true
+          semgrep scan \
+            --config "p/security-audit" \
+            --config "p/django" \
+            --config "p/owasp-top-ten" \
+            --no-git-ignore \
+            --sarif -o semgrep-findings.sarif \
+            . || true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
