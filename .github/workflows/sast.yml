@@ -27,7 +27,7 @@ jobs:
             --config "p/security-audit" \
             --config "p/django" \
             --config "p/owasp-top-ten" \
-            --config "p/sql-injection" \
+            --config "p/sqlalchemy" \
             --config "p/secrets" \
             --no-git-ignore \
             --sarif -o semgrep-findings.sarif \
@@ -36,7 +36,7 @@ jobs:
             --config "p/security-audit" \
             --config "p/django" \
             --config "p/owasp-top-ten" \
-            --config "p/sql-injection" \
+            --config "p/sqlalchemy" \
             --config "p/secrets" \
             --no-git-ignore \
             . || true
