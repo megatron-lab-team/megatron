@@ -23,10 +23,8 @@ jobs:
       - name: Run Semgrep
         run: |
           pip install semgrep
-          echo "=== 1. Детальний вивід знахідок у консоль ==="
           semgrep scan --config "p/security-audit" --config "p/django" --config "p/owasp-top-ten" || true
 
-          echo "=== 2. Генерація SARIF для артефакту ==="
           semgrep scan --config "p/security-audit" --config "p/django" --config "p/owasp-top-ten" --sarif -o semgrep-findings.sarif || true
 
       - name: Upload Artifact
