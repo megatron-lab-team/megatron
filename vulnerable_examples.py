@@ -11,7 +11,7 @@ DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1")
 
 def search_vulnerable(request, MyModel):
     q = request.GET.get("q", "")
-    rows = MyModel.objects.raw("SELECT * FROM myapp_mymodel WHERE name LIKE %s", [f"%{q}%"])
+    rows = MyModel.objects.filter(name__contains=q)
     return rows
 
 
