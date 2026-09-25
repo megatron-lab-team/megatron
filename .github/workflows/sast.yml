@@ -2,7 +2,7 @@ name: "Semgrep SAST"
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main", "master", "first_pipeline" ]
   pull_request:
     branches: [ "main", "master" ]
 
@@ -10,22 +10,24 @@ jobs:
   semgrep-scan:
     name: Scan code
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Run Semgrep and output SARIF
         run: |
           pip install semgrep
           semgrep scan --config "p/security-audit" --config "p/django" --config "p/owasp-top-ten" --sarif -o semgrep-findings.sarif
 
-      - name: Upload SARIF report to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep-findings.sarif
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         if: always()
+        with:
+          name: semgrep-report
+          path: semgrep-findings.sarif
