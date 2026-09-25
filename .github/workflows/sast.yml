@@ -24,20 +24,18 @@ jobs:
         run: |
           pip install semgrep
           semgrep scan \
+            --config "p/default" \
             --config "p/security-audit" \
             --config "p/django" \
             --config "p/owasp-top-ten" \
-            --config "p/sqlalchemy" \
-            --config "p/secrets" \
             --no-git-ignore \
             --sarif -o semgrep-findings.sarif \
             . || true
           semgrep scan \
+            --config "p/default" \
             --config "p/security-audit" \
             --config "p/django" \
             --config "p/owasp-top-ten" \
-            --config "p/sqlalchemy" \
-            --config "p/secrets" \
             --no-git-ignore \
             . || true
 
