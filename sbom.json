@@ -1,0 +1,101 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:02be2e96-463b-4893-8182-72082504c44e",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-01T21:52:05+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "manufacturer": {
+            "name": "Aqua Security Software Ltd."
+          },
+          "group": "aquasecurity",
+          "name": "trivy",
+          "version": "0.75.0"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "a8623757-5266-4fdb-9898-a79fae9455e2",
+      "type": "application",
+      "name": ".",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:SchemaVersion",
+          "value": "2"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "cb7716c0-6af0-4c56-af8f-c14f0f159763",
+      "type": "application",
+      "name": "requirements.txt",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:Class",
+          "value": "lang-pkgs"
+        },
+        {
+          "name": "aquasecurity:trivy:Type",
+          "value": "pip"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:pypi/opencv-python@5.0.0.93",
+      "type": "library",
+      "name": "opencv-python",
+      "version": "5.0.0.93",
+      "purl": "pkg:pypi/opencv-python@5.0.0.93",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:PkgType",
+          "value": "pip"
+        }
+      ]
+    },
+    {
+      "bom-ref": "pkg:pypi/pymysql@1.2.3",
+      "type": "library",
+      "name": "pymysql",
+      "version": "1.2.3",
+      "purl": "pkg:pypi/pymysql@1.2.3",
+      "properties": [
+        {
+          "name": "aquasecurity:trivy:PkgType",
+          "value": "pip"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "a8623757-5266-4fdb-9898-a79fae9455e2",
+      "dependsOn": [
+        "cb7716c0-6af0-4c56-af8f-c14f0f159763"
+      ]
+    },
+    {
+      "ref": "cb7716c0-6af0-4c56-af8f-c14f0f159763",
+      "dependsOn": [
+        "pkg:pypi/opencv-python@5.0.0.93",
+        "pkg:pypi/pymysql@1.2.3"
+      ]
+    },
+    {
+      "ref": "pkg:pypi/opencv-python@5.0.0.93",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:pypi/pymysql@1.2.3",
+      "dependsOn": []
+    }
+  ],
+  "vulnerabilities": []
+}
