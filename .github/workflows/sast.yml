@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   semgrep-scan:
     name: Scan code
@@ -45,3 +49,42 @@ jobs:
         with:
           name: semgrep-report
           path: semgrep-findings.sarif
+
+  build-and-push:
+    name: Build Docker Image & Generate SBOM
+    needs: sast-scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/megatron-app:latest
+            ghcr.io/${{ github.repository_owner }}/megatron-app:${{ github.sha }}
+
+      - name: Generate SBOM with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'cyclonedx'
+          output: 'sbom.json'
+
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclonedx-sbom
+          path: sbom.json
