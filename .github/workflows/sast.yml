@@ -61,7 +61,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fcf1117029c676c7332abf0fefd8f1 # v3.3.0
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
