@@ -88,7 +88,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/megatron-app:${{ github.sha }}
 
       - name: Generate SBOM with Trivy
-        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # 0.28.0
+        uses: aquasecurity/trivy-action@bfc25a9575e206085a3637e1df231c5ee9197c3f # 0.28.0
         with:
           scan-type: 'fs'
           format: 'cyclonedx'
