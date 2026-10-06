@@ -32,11 +32,12 @@ jobs:
           fail-build: false
           output-format: "sarif"
 
-      - name: Upload Grype SARIF report to GitHub Security
-        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
+      - name: Archive SARIF Artifact
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3
         if: always()
         with:
-          sarif_file: ${{ steps.grype-scan.outputs.sarif }}
+          name: grype-sarif-report
+          path: ${{ steps.grype-scan.outputs.sarif }}
 
       - name: Archive SBOM Artifact for QA
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
