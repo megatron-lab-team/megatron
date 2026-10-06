@@ -18,14 +18,14 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 (pin by SHA)
 
       - name: Generate CycloneDX SBOM with Syft
-        uses: anchore/sbom-action@bb716408e75840bbb725275c1080132298240a6a # v0.15.8
+        uses: anchore/sbom-action@d94f46e13c6c62f59525ac9a1e147a99dc0b9bf5 # v0.15.8
         with:
           path: "."
           format: "cyclonedx-json"
           output-file: "sbom.cyclonedx.json"
 
       - name: Scan SBOM with Grype
-        uses: anchore/scan-action@49206253457591605ee63428f5ae22340ae3ef93 # v3.6.4
+        uses: anchore/scan-action@d43cc1dfea6a99ed123bf8f3133f1797c9b44492 # v3.6.4
         id: grype-scan
         with:
           sbom: "sbom.cyclonedx.json"
