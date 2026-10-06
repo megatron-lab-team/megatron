@@ -1,0 +1,45 @@
+name: Supply Chain Security (SBOM & Vulnerability Scan)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  sbom-and-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 (pin by SHA)
+
+      - name: Generate CycloneDX SBOM with Syft
+        uses: anchore/sbom-action@bb716408e75840bbb725275c1080132298240a6a # v0.15.8
+        with:
+          path: "."
+          format: "cyclonedx-json"
+          output-file: "sbom.cyclonedx.json"
+
+      - name: Scan SBOM with Grype
+        uses: anchore/scan-action@49206253457591605ee63428f5ae22340ae3ef93 # v3.6.4
+        id: grype-scan
+        with:
+          sbom: "sbom.cyclonedx.json"
+          fail-build: false
+          output-format: "sarif"
+
+      - name: Upload Grype SARIF report to GitHub Security
+        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
+        if: always()
+        with:
+          sarif_file: ${{ steps.grype-scan.outputs.sarif }}
+
+      - name: Archive SBOM Artifact for QA
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cyclonedx.json
