@@ -44,3 +44,9 @@ jobs:
         with:
           name: sbom-cyclonedx
           path: sbom.cyclonedx.json
+
+      - name: Upload Grype SARIF report to GitHub Security
+        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
+        if: always() && github.event_name != 'pull_request'
+        with:
+          sarif_file: ${{ steps.grype-scan.outputs.sarif }}
