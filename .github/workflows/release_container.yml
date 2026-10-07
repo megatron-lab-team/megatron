@@ -48,5 +48,5 @@ jobs:
         run: |
           cosign sign --yes "${IMAGE_NAME}@${IMAGE_DIGEST}"
         env:
-          IMAGE_NAME: ${{ steps.meta.outputs.tags[0] }}
+          IMAGE_NAME: ghcr.io/${{ github.repository }}
           IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
