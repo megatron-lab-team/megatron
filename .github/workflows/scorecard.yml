@@ -41,7 +41,7 @@ jobs:
           name: SARIF_results
           path: results.sarif
 
-      display-score:
+  display-score:
     name: Display Score Summary
     needs: analysis
     runs-on: ubuntu-latest
