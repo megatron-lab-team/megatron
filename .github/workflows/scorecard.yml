@@ -35,6 +35,20 @@ jobs:
           results_format: sarif
           publish_results: true
 
+      - name: Calculate and display Aggregate Score
+        if: always()
+        run: |
+          echo "### OpenSSF Scorecard Results" >> $GITHUB_STEP_SUMMARY
+        
+          SCORES=$(jq -r '.runs[].results[].message.text' results.sarif | grep -o 'score is [0-9]*' | awk '{print $3}')
+          if [ -n "$SCORES" ]; then
+            AVG=$(echo "$SCORES" | awk '{sum+=$1; count++} END {if (count > 0) printf "%.1f", sum/count; else print "N/A"}')
+            echo "Aggregate score: $AVG / 10"
+            echo "**Aggregate score:** $AVG / 10" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Aggregate score: N/A / 10"
+          fi
+
       - name: "Upload artifact"
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
