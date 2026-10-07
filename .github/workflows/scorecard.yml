@@ -35,11 +35,26 @@ jobs:
           results_format: sarif
           publish_results: true
 
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: SARIF_results
+          path: results.sarif
+
+      display-score:
+    name: Display Score Summary
+    needs: analysis
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: "Download SARIF"
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        with:
+          name: SARIF_results
+
       - name: Calculate and display Aggregate Score
-        if: always()
         run: |
           echo "### OpenSSF Scorecard Results" >> $GITHUB_STEP_SUMMARY
-        
           SCORES=$(jq -r '.runs[].results[].message.text' results.sarif | grep -o 'score is [0-9]*' | awk '{print $3}')
           if [ -n "$SCORES" ]; then
             AVG=$(echo "$SCORES" | awk '{sum+=$1; count++} END {if (count > 0) printf "%.1f", sum/count; else print "N/A"}')
@@ -47,10 +62,7 @@ jobs:
             echo "**Aggregate score:** $AVG / 10" >> $GITHUB_STEP_SUMMARY
           else
             echo "Aggregate score: N/A / 10"
+            echo "**Aggregate score:** N/A / 10" >> $GITHUB_STEP_SUMMARY
           fi
-
-      - name: "Upload artifact"
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-        with:
-          name: SARIF_results
-          path: results.sarif
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[View full Scorecard report online](https://securityscorecards.dev/viewer/?uri=github.com/megatron-lab-team/megatron)" >> $GITHUB_STEP_SUMMARY
